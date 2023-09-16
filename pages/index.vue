@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import moment from "moment";
 interface InfoDetails {
   title: String;
   value: String;
@@ -18,6 +17,7 @@ const preSaleDetails = ref<Array<InfoDetails>>([
   { title: "Total allocation", value: "300,000 BEANZ" },
 ]);
 const { scrollToAnchor } = useAnchorScroll();
+const { $dayjs } = useNuxtApp();
 // const $Web3 = useWeb3();
 // const runtimeConfig = useRuntimeConfig();
 // const walletAddress = "0x0320DE3378dCDE180758ad2D41C0e1C6dCbB441D";
@@ -26,13 +26,13 @@ const { scrollToAnchor } = useAnchorScroll();
 // );
 // const web3 = new $Web3($Web3.givenProvider ?? provider);
 // const balance = await web3.eth.getBalance(walletAddress);
-const currTime = ref(moment());
-const startTime = moment("2023-10-16  00:00:00");
-const endTime = moment("2023-11-18 23:59:00");
+const currTime = ref($dayjs());
+const startTime = $dayjs("2023-10-16  00:00:00");
+const endTime = $dayjs("2023-11-18 23:59:00");
 const timeToStart = computed(() =>
-  moment.duration(startTime.diff(currTime.value)),
+  $dayjs.duration(startTime.diff(currTime.value)),
 );
-const timeToEnd = computed(() => moment.duration(endTime.diff(currTime.value)));
+const timeToEnd = computed(() => $dayjs.duration(endTime.diff(currTime.value)));
 const preSaleStarted = computed(() => currTime.value > startTime);
 const preSaleEnded = computed(() => currTime.value > endTime);
 const totalTokens = ref(300000);
@@ -49,20 +49,32 @@ const formattedLeftTokens = computed(() =>
 onMounted(() => {
   if (!preSaleEnded.value)
     setInterval(() => {
-      currTime.value = moment(currTime.value.add(1, "s"));
+      currTime.value = $dayjs(currTime.value.add(1, "s"));
     }, 1000);
   //   const balance = await web3.eth.getBalance(
   //     "0xf84dcb40232d78ce869c122b064249bcdf662f4d",
   //   );
   //   console.log(balance);
 });
+useHead({
+  title: "Blue Bean",
+  meta: [
+    {
+      name: "description",
+      content:
+        "BlueBean is a decentralized social Experiment on Base Ecosystem",
+    },
+  ],
+  htmlAttrs: {
+    lang: "en",
+  },
+});
 </script>
 
 <template>
   <div
-    class="relative flex min-h-screen flex-col justify-between bg-[#07121C] bg-cover bg-center bg-no-repeat pt-10"
+    class="flex min-h-screen flex-col justify-between bg-[url('/bg.webp')] bg-cover bg-center pt-10"
   >
-    <NuxtImg src="/e1.svg" class="absolute right-20 top-0" />
     <div>
       <header class="container mx-auto">
         <nav
@@ -71,6 +83,7 @@ onMounted(() => {
           <div class="flex items-center">
             <NuxtImg
               src="/blue-bean.webp"
+              alt="logo"
               class="w-10 min-[375px]:w-12 lg:w-16"
             />
             <span class="font-bold min-[375px]:text-lg sm:text-xl lg:text-2xl">
@@ -102,7 +115,7 @@ onMounted(() => {
           <div
             class="flex flex-col items-center justify-center gap-4 lg:flex-row"
           >
-            <NuxtImg src="/blue-bean.webp" width="382" />
+            <NuxtImg src="/blue-bean.webp" alt="Blue Bean" width="382" />
             <div class="px-6">
               <p class="text-md max-w-xl sm:text-xl">
                 BlueBean is a decentralized social Experiment on Base Ecosystem,
@@ -117,6 +130,7 @@ onMounted(() => {
                 href="https://shorturl.at/rtvwQ"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Read more about Blue Bean."
               >
                 <button
                   class="relative mt-6 overflow-hidden rounded-full bg-gradient-to-r from-[#FF00F5] to-[#00DBDE] px-10 py-2 font-semibold"
@@ -381,12 +395,16 @@ onMounted(() => {
     <footer class="bg-[#07121C]">
       <div class="bg-[#C9E8E8]/[0.08] py-14">
         <div class="container mx-auto flex flex-col items-center gap-6">
-          <AtomsLogo />
+          <div class="flex items-center">
+            <NuxtImg src="/blue-bean.webp" width="64" alt="logo" />
+            <span class="text-2xl font-bold">BLUE BEAN</span>
+          </div>
           <div class="flex gap-6">
             <a
               href="https://t.me/+4jVYbWVFwjE2ZTBk"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Join us on Telegram"
             >
               <span
                 class="flex h-10 w-10 items-center justify-center rounded-full bg-[#1877F2]"
@@ -399,6 +417,7 @@ onMounted(() => {
               href="https://twitter.com/bluebeantoken?t=VsGcighc8a-TetXH7sciKA&s=09"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Follow us on Twitter"
             >
               <span
                 class="flex h-10 w-10 items-center justify-center rounded-full bg-[#1DA1F2]"

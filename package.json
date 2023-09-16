@@ -9,6 +9,7 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
+    "@nathanchase/nuxt-dayjs-module": "^1.0.15",
     "@nuxt/devtools": "latest",
     "@nuxtjs/google-fonts": "^3.0.2",
     "autoprefixer": "^10.4.15",
@@ -22,7 +23,6 @@
   },
   "dependencies": {
     "@nuxt/image": "^1.0.0-rc.2",
-    "moment": "^2.29.4",
     "nuxt-web3.js": "^0.1.5"
   }
 }

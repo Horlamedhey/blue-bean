@@ -15,9 +15,13 @@ export default defineNuxtConfig({
     "@nuxtjs/google-fonts",
     "nuxt-svgo",
     "@nuxt/image",
-    "nuxt-web3.js",
+    // "nuxt-web3.js",
     "nuxt-anchorscroll",
+    "@nathanchase/nuxt-dayjs-module",
   ],
+  dayjs: {
+    plugins: ["duration"],
+  },
   googleFonts: {
     families: {
       Poppins: {

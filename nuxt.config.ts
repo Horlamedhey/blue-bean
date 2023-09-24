@@ -1,8 +1,36 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfill";
+import { NodeModulesPolyfillPlugin } from "@esbuild-plugins/node-modules-polyfill";
 export default defineNuxtConfig({
   devtools: { enabled: false },
   typescript: {
     shim: false,
+  },
+  vite: {
+    resolve: {
+      alias: {
+        process: "process/browser",
+        util: "util",
+      },
+    },
+    optimizeDeps: {
+      esbuildOptions: {
+        target: "esnext",
+        define: {
+          global: "globalThis",
+        },
+        plugins: [
+          NodeGlobalsPolyfillPlugin({
+            process: true,
+            buffer: true,
+          }),
+          NodeModulesPolyfillPlugin(),
+        ],
+        supported: {
+          bigint: true,
+        },
+      },
+    },
   },
   css: ["~/assets/css/main.css"],
   postcss: {
@@ -15,8 +43,8 @@ export default defineNuxtConfig({
     "@nuxtjs/google-fonts",
     "nuxt-svgo",
     "@nuxt/image",
-    // "nuxt-web3.js",
     "nuxt-anchorscroll",
+    "@use-wagmi/nuxt",
     "@nathanchase/nuxt-dayjs-module",
   ],
   dayjs: {

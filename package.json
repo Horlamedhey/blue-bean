@@ -9,9 +9,12 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
+    "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@nathanchase/nuxt-dayjs-module": "^1.0.15",
     "@nuxt/devtools": "latest",
     "@nuxtjs/google-fonts": "^3.0.2",
+    "@use-wagmi/nuxt": "^1.1.8",
     "autoprefixer": "^10.4.15",
     "nuxt": "^3.7.3",
     "nuxt-anchorscroll": "^1.0.2",
@@ -23,6 +26,7 @@
   },
   "dependencies": {
     "@nuxt/image": "^1.0.0-rc.2",
-    "nuxt-web3.js": "^0.1.5"
+    "use-wagmi": "^0.4.1",
+    "viem": "^1.10.14"
   }
 }

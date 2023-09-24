@@ -18,14 +18,17 @@ const preSaleDetails = ref<Array<InfoDetails>>([
 ]);
 const { scrollToAnchor } = useAnchorScroll();
 const { $dayjs } = useNuxtApp();
-// const $Web3 = useWeb3();
-// const runtimeConfig = useRuntimeConfig();
-// const walletAddress = "0x0320DE3378dCDE180758ad2D41C0e1C6dCbB441D";
-// const provider = new $Web3.providers.HttpProvider(
-//   runtimeConfig.public.provider.host,
-// );
-// const web3 = new $Web3($Web3.givenProvider ?? provider);
-// const balance = await web3.eth.getBalance(walletAddress);
+
+// data, isLoading, error, pendingConnector
+
+const { connect, connectors } = useConnect();
+
+// const { disconnect } = useDisconnect();
+// , isLoading: isLoadingBalance
+
+const { data: balance } = useBalance({
+  address: "0x2a0BcADEdAdFEcFC30123139a15E331522033220",
+});
 const currTime = ref($dayjs());
 const startTime = $dayjs("2023-10-16  00:00:00");
 const endTime = $dayjs("2023-11-18 23:59:00");
@@ -36,7 +39,9 @@ const timeToEnd = computed(() => $dayjs.duration(endTime.diff(currTime.value)));
 const preSaleStarted = computed(() => currTime.value > startTime);
 const preSaleEnded = computed(() => currTime.value > endTime);
 const totalTokens = ref(300000);
-const soldTokens = ref(0);
+const soldTokens = computed(
+  () => Number(balance.value?.formatted) * 30000 ?? 0,
+);
 const leftTokens = computed(() => totalTokens.value - soldTokens.value);
 const progress = computed(() => (soldTokens.value / totalTokens.value) * 100);
 const formattedSoldTokens = computed(() =>
@@ -51,10 +56,7 @@ onMounted(() => {
     setInterval(() => {
       currTime.value = $dayjs(currTime.value.add(1, "s"));
     }, 1000);
-  //   const balance = await web3.eth.getBalance(
-  //     "0xf84dcb40232d78ce869c122b064249bcdf662f4d",
-  //   );
-  //   console.log(balance);
+  // disconnect();
 });
 useHead({
   title: "Blue Bean",
@@ -383,6 +385,7 @@ useHead({
               <button
                 id="beanz"
                 class="relative w-[450px] max-w-xs overflow-hidden rounded-full bg-gradient-to-r from-[#FF00F5] to-[#00DBDE] py-3 text-lg font-semibold"
+                @click="connect({ connector: connectors[0] })"
               >
                 <AtomsOverlay />
                 <span class="relative">Buy BEANZ</span>

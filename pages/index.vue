@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { MetaMaskSDK } from "@metamask/sdk";
 interface InfoDetails {
   title: String;
   value: String;
@@ -18,10 +19,21 @@ const preSaleDetails = ref<Array<InfoDetails>>([
 ]);
 const { scrollToAnchor } = useAnchorScroll();
 const { $dayjs } = useNuxtApp();
+const MMSDK = new MetaMaskSDK({
+  dappMetadata: { name: "Blue Bean", url: "https://blue-bean.vercel.app" },
+  checkInstallationImmediately: false,
+  checkInstallationOnAllCalls: true,
+});
+
+const connect = async () => {
+  await MMSDK.init();
+  const ethereum = MMSDK.getProvider();
+  ethereum.request({ method: "eth_requestAccounts", params: [] });
+};
 
 // data, isLoading, error, pendingConnector
 
-const { connect, connectors } = useConnect();
+// const { connect, connectors } = useConnect();
 
 // const { disconnect } = useDisconnect();
 // , isLoading: isLoadingBalance
@@ -39,8 +51,8 @@ const timeToEnd = computed(() => $dayjs.duration(endTime.diff(currTime.value)));
 const preSaleStarted = computed(() => currTime.value > startTime);
 const preSaleEnded = computed(() => currTime.value > endTime);
 const totalTokens = ref(300000);
-const soldTokens = computed(
-  () => Number(balance.value?.formatted) * 30000 ?? 0,
+const soldTokens = computed(() =>
+  balance.value?.formatted ? Number(balance.value?.formatted) * 30000 : 0,
 );
 const leftTokens = computed(() => totalTokens.value - soldTokens.value);
 const progress = computed(() => (soldTokens.value / totalTokens.value) * 100);
@@ -56,7 +68,6 @@ onMounted(() => {
     setInterval(() => {
       currTime.value = $dayjs(currTime.value.add(1, "s"));
     }, 1000);
-  // disconnect();
 });
 useHead({
   title: "Blue Bean",
@@ -385,7 +396,7 @@ useHead({
               <button
                 id="beanz"
                 class="relative w-[450px] max-w-xs overflow-hidden rounded-full bg-gradient-to-r from-[#FF00F5] to-[#00DBDE] py-3 text-lg font-semibold"
-                @click="connect({ connector: connectors[0] })"
+                @click="connect"
               >
                 <AtomsOverlay />
                 <span class="relative">Buy BEANZ</span>

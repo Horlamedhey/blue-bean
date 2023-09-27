@@ -44,7 +44,6 @@ export default defineNuxtConfig({
     "nuxt-svgo",
     "@nuxt/image",
     "nuxt-anchorscroll",
-    "@use-wagmi/nuxt",
     "@nathanchase/nuxt-dayjs-module",
   ],
   dayjs: {
@@ -61,12 +60,5 @@ export default defineNuxtConfig({
       },
     },
     display: "swap",
-  },
-  runtimeConfig: {
-    public: {
-      provider: {
-        host: `https://goerli.basescan.org`,
-      },
-    },
   },
 });

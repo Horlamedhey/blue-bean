@@ -22,7 +22,7 @@ const { $dayjs } = useNuxtApp();
 const loading = ref(false);
 const MMSDK = new MetaMaskSDK({
   dappMetadata: { name: "Blue Bean", url: "https://blue-bean.vercel.app" },
-  checkInstallationImmediately: false,
+  checkInstallationImmediately: true,
   checkInstallationOnAllCalls: true,
 });
 const ethereum = ref(null);

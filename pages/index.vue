@@ -19,6 +19,7 @@ const preSaleDetails = ref<Array<InfoDetails>>([
 ]);
 const { scrollToAnchor } = useAnchorScroll();
 const { $dayjs } = useNuxtApp();
+const loading = ref(false);
 const MMSDK = new MetaMaskSDK({
   dappMetadata: { name: "Blue Bean", url: "https://blue-bean.vercel.app" },
   checkInstallationImmediately: false,
@@ -26,9 +27,17 @@ const MMSDK = new MetaMaskSDK({
 });
 
 const connect = async () => {
-  await MMSDK.init();
-  const ethereum = MMSDK.getProvider();
-  ethereum.request({ method: "eth_requestAccounts", params: [] });
+  loading.value = true;
+  try {
+    MMSDK.init().then(() => {
+      const ethereum = MMSDK.getProvider();
+      ethereum.request({ method: "eth_requestAccounts", params: [] });
+    });
+  } catch (error) {
+    console.log(3, error);
+  } finally {
+    loading.value = false;
+  }
 };
 
 // data, isLoading, error, pendingConnector
@@ -395,11 +404,13 @@ useHead({
             <div class="mt-20 flex justify-center">
               <button
                 id="beanz"
-                class="relative w-[450px] max-w-xs overflow-hidden rounded-full bg-gradient-to-r from-[#FF00F5] to-[#00DBDE] py-3 text-lg font-semibold"
+                class="relative w-[450px] max-w-xs overflow-hidden rounded-full bg-gradient-to-r from-[#FF00F5] to-[#00DBDE] py-3 text-lg font-semibold transition duration-700 disabled:opacity-20"
+                :disabled="loading"
                 @click="connect"
               >
                 <AtomsOverlay />
-                <span class="relative">Buy BEANZ</span>
+                <span v-if="loading" class="relative">Loading...</span>
+                <span v-else class="relative">Buy BEANZ</span>
               </button>
             </div>
           </div>

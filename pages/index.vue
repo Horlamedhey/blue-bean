@@ -25,14 +25,12 @@ const MMSDK = new MetaMaskSDK({
   checkInstallationImmediately: false,
   checkInstallationOnAllCalls: true,
 });
-
+const ethereum = ref(null);
 const connect = async () => {
   loading.value = true;
   try {
-    MMSDK.init().then(() => {
-      const ethereum = MMSDK.getProvider();
-      ethereum.request({ method: "eth_requestAccounts", params: [] });
-    });
+    ethereum.value?.request({ method: "eth_requestAccounts", params: [] });
+    // });
   } catch (error) {
     console.log(3, error);
   } finally {
@@ -77,6 +75,11 @@ onMounted(() => {
     setInterval(() => {
       currTime.value = $dayjs(currTime.value.add(1, "s"));
     }, 1000);
+  setTimeout(() => {
+    MMSDK.init().then(() => {
+      ethereum.value = MMSDK.getProvider();
+    });
+  }, 300);
 });
 useHead({
   title: "Blue Bean",
